@@ -1,0 +1,59 @@
+import turtle
+import random
+
+
+screen = turtle.Screen()
+screen.setup(600, 600)
+screen.bgcolor("darkslategray")
+screen.tracer(0)
+
+class SteamPuff(turtle.Turtle):
+    def __init__(self, x_pos, y_pos):  
+        super().__init__()
+        self.penup()
+        self.shape("circle")
+        self.color("black")
+        self.goto(x_pos, y_pos)
+        self.size = random.randint(5, 15)  
+        self.setheading(90)  
+        self.speed(0) #max speed
+
+    def move(self):
+        if self.size > 10:
+            self.color("#ffffff")
+        elif self.size > 5:
+            self.color("#f0f0f0")
+        else:
+            self.color("#e0e0e0")
+        
+        self.shapesize(self.size / 20)  
+        self.forward(random.uniform(0.5, 1.5)) 
+        self.size -= 0.1   #should not go smaller than that otherwise code will stop
+
+steam_puffs = []  #new index for class steampuff
+def create_steam():
+    x = random.randint(-15, 15)  
+    y = -200 # 
+    new_puff = SteamPuff(x, y)
+    steam_puffs.append(new_puff)
+
+def animate():
+    screen.update()  
+    
+    
+    if random.random() < 0.2:
+        create_steam()
+    
+    
+    for puff in steam_puffs:
+        puff.move()
+        if puff.size <= 0:
+            puff.hideturtle()           
+            steam_puffs.remove(puff)
+
+    
+    screen.ontimer(animate, 20) 
+
+
+animate()
+screen.mainloop() 
