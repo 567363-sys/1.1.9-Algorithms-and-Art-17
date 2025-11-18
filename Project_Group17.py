@@ -47,7 +47,9 @@ p.goto(150,105)
 p.pendown()
 p.left(90)
 p.forward(100)
+#extra still drawing goes here
 
+#animation after this point
 
 wn = trtl.Screen()
 wn.mainloop()
