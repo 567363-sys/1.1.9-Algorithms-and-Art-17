@@ -1,6 +1,4 @@
-#   a113_long_circle.py
-#   Draw a circle calling only the forward and
-#   right methods
+import time
 import turtle as trtl
 import random as ran
 p = trtl.Turtle()
@@ -72,7 +70,123 @@ p.penup()
 
 
 #Animation after this point (probably figure out some wierd loop to make it all run at once)
+screen=trtl.Screen()
+trtl.tracer(0)
 
 
+
+
+snowflakes = []
+secondwindow = []
+for i in range(5):  #Makes first snowflakes
+  actsnow = trtl.Turtle()
+  actsnow.hideturtle()
+  actsnow.setheading(270)
+  actsnow.penup()
+  actsnow.goto(ran.randint(-130, -50), 169)
+  actsnow.shape('circle')
+  actsnow.color('white')
+  actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+  snowflakes.append(actsnow)
+for i in range(5):  #Makes second window snowflakes
+  actsnow = trtl.Turtle()
+  actsnow.hideturtle()
+  actsnow.setheading(270)
+  actsnow.penup()
+  actsnow.goto(ran.randint(60, 140), 169)
+  actsnow.shape('circle')
+  actsnow.color('white')
+  actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+  secondwindow.append(actsnow)
+alternate = 1
+x=1
+while x == 1: #infinite loop
+
+#SNOWFLAKES!
+  if alternate%30 == 0:
+    actsnow = trtl.Turtle()
+    actsnow.hideturtle()
+    actsnow.setheading(270)
+    actsnow.penup()
+    actsnow.goto(ran.randint(-130, -50), 169)
+    actsnow.shape('circle')
+    actsnow.color('white')
+    actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+    snowflakes.append(actsnow)
+  
+  s1=ran.choice(snowflakes)
+  s2=ran.choice(snowflakes)
+  s3=ran.choice(snowflakes)
+  s4=ran.choice(snowflakes)
+  s1.showturtle()
+  s2.showturtle()
+  s3.showturtle()
+  s4.showturtle()   #moves snow
+  s1.forward(ran.randint(3,10))
+  s2.forward(ran.randint(8,15))
+  s3.forward(ran.randint(3,10))
+  s4.forward(ran.randint(8,15))
+  if s1.ycor() > 40:   #gets rid of snow below window
+    snowflakes.append(s1)
+  else:
+    s1.hideturtle()
+  if s2.ycor() > 40:
+    snowflakes.append(s2)
+  else:
+    s2.hideturtle()
+  if s3.ycor() > 40:
+    snowflakes.append(s3)
+  else:
+    s3.hideturtle()
+  if s4.ycor() > 40:
+    snowflakes.append(s4)
+  else:
+    s4.hideturtle()
+    
+  
+    #Second window
+  if alternate%30 == 0:
+    actsnow = trtl.Turtle()
+    actsnow.hideturtle()
+    actsnow.setheading(270)
+    actsnow.penup()
+    actsnow.goto(ran.randint(60, 140), 169)
+    actsnow.shape('circle')
+    actsnow.color('white')
+    actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+    secondwindow.append(actsnow)
+    alternate=alternate+1
+  else:
+    alternate=alternate+1
+  s1=ran.choice(secondwindow)
+  s2=ran.choice(secondwindow)
+  s3=ran.choice(secondwindow)
+  s4=ran.choice(secondwindow)
+  s1.showturtle()
+  s2.showturtle()
+  s3.showturtle()
+  s4.showturtle()   #moves snow
+  s1.forward(ran.randint(3,10))
+  s2.forward(ran.randint(8,15))
+  s3.forward(ran.randint(3,10))
+  s4.forward(ran.randint(8,15))
+  if s1.ycor() > 40:   #gets rid of snow below window
+    secondwindow.append(s1)
+  else:
+    s1.hideturtle()
+  if s2.ycor() > 40:
+    secondwindow.append(s2)
+  else:
+    s2.hideturtle()
+  if s3.ycor() > 40:
+    secondwindow.append(s3)
+  else:
+    s3.hideturtle()
+  if s4.ycor() > 40:
+    secondwindow.append(s4)
+  else:
+    s4.hideturtle()
+  time.sleep(.005)
+  trtl.update()   #update screen for animation
 wn = trtl.Screen()
 wn.mainloop()
