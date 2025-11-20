@@ -1,6 +1,7 @@
 #   a113_long_circle.py
 #   Draw a circle calling only the forward and
 #   right methods
+import time
 import turtle as trtl
 import random as ran
 p = trtl.Turtle()
@@ -72,20 +73,71 @@ p.penup()
 
 
 #Animation after this point (probably figure out some wierd loop to make it all run at once)
+screen=trtl.Screen()
+trtl.tracer(0)
+
+
+
+
 snowflakes = []
+for i in range(5):  #Makes first snowflakes
+  actsnow = trtl.Turtle()
+  actsnow.hideturtle()
+  actsnow.setheading(270)
+  actsnow.penup()
+  actsnow.goto(ran.randint(-130, -50), 169)
+  actsnow.shape('circle')
+  actsnow.color('white')
+  actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+  snowflakes.append(actsnow)
+alternate = 1
+
 x=1
 while x == 1: #infinite loop
-  for i in range(20):
-    actsnow = trtl.Turtle(shape = 'circle')
+
+#SNOWFLAKES!
+  if alternate == -1:
+    actsnow = trtl.Turtle()
     actsnow.hideturtle()
+    actsnow.setheading(270)
     actsnow.penup()
     actsnow.goto(ran.randint(-130, -50), 169)
+    actsnow.shape('circle')
     actsnow.color('white')
     actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
-    actsnow.showturtle()
-    
-    
-
-
+    snowflakes.append(actsnow)
+    alternate=alternate*-1
+  else:
+    alternate=alternate*-1
+  s1=ran.choice(snowflakes)
+  s2=ran.choice(snowflakes)
+  s3=ran.choice(snowflakes)
+  s4=ran.choice(snowflakes)
+  s1.showturtle()
+  s2.showturtle()
+  s3.showturtle()
+  s4.showturtle()   #moves snow
+  s1.forward(ran.randint(3,10))
+  s2.forward(ran.randint(8,15))
+  s3.forward(ran.randint(3,10))
+  s4.forward(ran.randint(8,15))
+  if s1.ycor() > 40:   #gets rid of snow below window
+    snowflakes.append(s1)
+  else:
+    s1.hideturtle()
+  if s2.ycor() > 40:
+    snowflakes.append(s2)
+  else:
+    s2.hideturtle()
+  if s3.ycor() > 40:
+    snowflakes.append(s3)
+  else:
+    s3.hideturtle()
+  if s4.ycor() > 40:
+    snowflakes.append(s4)
+  else:
+    s4.hideturtle()
+  
+  trtl.update()   #update screen for animation
 wn = trtl.Screen()
 wn.mainloop()
