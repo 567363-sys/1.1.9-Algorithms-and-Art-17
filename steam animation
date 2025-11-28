@@ -4,7 +4,7 @@ import random
 
 screen = turtle.Screen()
 screen.setup(600, 600)
-screen.bgcolor("darkslategray")
+screen.bgcolor("white")
 screen.tracer(0)
 
 class SteamPuff(turtle.Turtle):
@@ -12,7 +12,7 @@ class SteamPuff(turtle.Turtle):
         super().__init__()
         self.penup()
         self.shape("circle")
-        self.color("black")
+        self.color("#000000")
         self.goto(x_pos, y_pos)
         self.size = random.randint(5, 15)  
         self.setheading(90)  
@@ -20,11 +20,11 @@ class SteamPuff(turtle.Turtle):
 
     def move(self):
         if self.size > 10:
-            self.color("#ffffff")
+            self.color("#000000")
         elif self.size > 5:
-            self.color("#f0f0f0")
+            self.color("#000000")
         else:
-            self.color("#e0e0e0")
+            self.color("#000000")
         
         self.shapesize(self.size / 20)  
         self.forward(random.uniform(0.5, 1.5)) 
