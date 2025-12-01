@@ -41,6 +41,7 @@ for i in range(2):
   p.left(90)
 p.end_fill()
 #Inner lines
+p.pensize(5)
 p.penup()
 p.goto(-90,40)
 p.left(90)
@@ -66,10 +67,11 @@ p.penup()
 
 
 
-#Extra still drwaing code goes here!!!!!
+#Extra still drawing code goes here!!!!!
 
 
 #Animation after this point (probably figure out some wierd loop to make it all run at once)
+p.hideturtle()
 screen=trtl.Screen()
 trtl.tracer(0)
 
@@ -112,7 +114,10 @@ while x == 1: #infinite loop
     actsnow.shape('circle')
     actsnow.color('white')
     actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
-    snowflakes.append(actsnow)
+    if -95< actsnow.xcor()<-85 :   #no more snow on middle line(almost)   (FIXED IT)
+      actsnow.hideturtle()
+    else:
+      snowflakes.append(actsnow)
   
   s1=ran.choice(snowflakes)
   s2=ran.choice(snowflakes)
@@ -126,6 +131,26 @@ while x == 1: #infinite loop
   s2.forward(ran.randint(8,15))
   s3.forward(ran.randint(3,10))
   s4.forward(ran.randint(8,15))
+
+
+  if 100 < s1.ycor() <110:   #Hide turtle behind window bar
+    s1.hideturtle()
+  else:
+    s1.showturtle()
+  if 100 < s2.ycor() <110:
+    s2.hideturtle()
+  else:
+    s2.showturtle()
+  if 100 <s3.ycor()<110:
+    s3.hideturtle()
+  else:
+    s3.showturtle()
+  if 100 < s4.ycor() <110:
+    s4.hideturtle()
+  else:
+    s4.showturtle()
+
+
   if s1.ycor() > 40:   #gets rid of snow below window
     snowflakes.append(s1)
   else:
@@ -156,6 +181,10 @@ while x == 1: #infinite loop
     actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
     secondwindow.append(actsnow)
     alternate=alternate+1
+    if 105> actsnow.xcor()>95:
+      actsnow.hideturtle
+    else:
+      snowflakes.append(actsnow)
   else:
     alternate=alternate+1
   s1=ran.choice(secondwindow)
@@ -170,6 +199,28 @@ while x == 1: #infinite loop
   s2.forward(ran.randint(8,15))
   s3.forward(ran.randint(3,10))
   s4.forward(ran.randint(8,15))
+  
+  
+
+
+  if 100 < s1.ycor() <110:   #Hide turtle behind window bar
+    s1.hideturtle()
+  else:
+    s1.showturtle()
+  if 100 < s2.ycor() <110:
+    s2.hideturtle()
+  else:
+    s2.showturtle()
+  if 100 <s3.ycor()<110:
+    s3.hideturtle()
+  else:
+    s3.showturtle()
+  if 100 < s4.ycor() <110:
+    s4.hideturtle()
+  else:
+    s4.showturtle()
+
+
   if s1.ycor() > 40:   #gets rid of snow below window
     secondwindow.append(s1)
   else:
@@ -188,5 +239,4 @@ while x == 1: #infinite loop
     s4.hideturtle()
   time.sleep(.005)
   trtl.update()   #update screen for animation
-wn = trtl.Screen()
-wn.mainloop()
+#Just realized we don't need the last part because of animation code!
