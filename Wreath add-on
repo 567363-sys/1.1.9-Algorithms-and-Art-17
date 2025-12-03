@@ -1,0 +1,198 @@
+import turtle
+import math
+import random
+
+# ---------- Setup ----------
+screen = turtle.Screen()
+screen.setup(800, 800)
+screen.bgcolor("#0e0f12")  # dark background to make the glow pop
+screen.tracer(0, 0)  # manual update for smooth animation
+
+# Static drawer (wreath and decorations)
+drawer = turtle.Turtle()
+drawer.hideturtle()
+drawer.speed(0)
+drawer.pensize(2)
+
+# Lights will each use their own turtle so we can clear/redraw them independently
+class Light:
+    def __init__(self, x, y, base_color):
+        self.x = x
+        self.y = y
+        self.base_color = base_color  # base warm color name (string)
+        self.t = turtle.Turtle()
+        self.t.hideturtle()
+        self.t.penup()
+        self.t.speed(0)
+
+    def draw_glow(self, intensity):
+        # intensity: 0.0 .. 1.0 (higher is brighter)
+        self.t.clear()
+        # simulate glow by drawing concentric circles (no alpha in turtle)
+        # outer rings: larger radii, lighter color (we simulate by using paler colors)
+        r_base = 12 + intensity * 10
+        rings = [
+            (r_base * 1.8, self._mix(self.base_color, "#0e0f12", 0.75)),  # widest, faint
+            (r_base * 1.1, self._mix(self.base_color, "#0e0f12", 0.45)),
+            (r_base * 0.6, self._mix(self.base_color, "#ffffff", 0.08)),
+            (r_base * 0.35, self._mix(self.base_color, "#ffffff", 0.0)),   # core bright
+        ]
+        for radius, color in rings:
+            self.t.goto(self.x, self.y - radius)
+            self.t.fillcolor("yellow")
+            self.t.begin_fill()
+            self.t.pendown()
+            self.t.circle(radius)
+            self.t.penup()
+            self.t.end_fill()
+
+    def _mix(self, hex1, hex2, frac):
+        # simple color mix: frac fraction of hex2 (0..1)
+        # returns hex color string
+        h1 = hex1.lstrip("#")
+        h2 = hex2.lstrip("#")
+        r1, g1, b1 = int(h1[0:2], 16), int(h1[2:4], 16), int(h1[4:6], 16)
+        r2, g2, b2 = int(h2[0:2], 16), int(h2[2:4], 16), int(h2[4:6], 16)
+        r = int(r1 * (1 - frac) + r2 * frac)
+        g = int(g1 * (1 - frac) + g2 * frac)
+        b = int(b1 * (1 - frac) + b2 * frac)
+
+# ---------- Draw wreath (static) ----------
+def draw_wreath():
+    drawer.clear()
+    # base ring
+    cx, cy = 0, -40
+    outer_r = 260
+    inner_r = 140
+
+    # draw outer green circle (thick)
+    drawer.penup()
+    drawer.goto(0, cy - outer_r)
+    drawer.pendown()
+    drawer.fillcolor("#0b6b2a")
+    drawer.begin_fill()
+    drawer.circle(outer_r)
+    drawer.end_fill()
+
+    # cut inner hole
+    drawer.penup()
+    drawer.goto(0, cy - inner_r)
+    drawer.pendown()
+    drawer.begin_fill()
+    drawer.circle(inner_r)
+    drawer.end_fill()
+
+    # draw layered leaves around the ring
+    drawer.penup()
+    leaf_count = 60
+    for i in range(leaf_count):
+        ang = 360 * i / leaf_count
+        rad = (outer_r + inner_r) / 2
+        x = cx + rad * math.cos(math.radians(ang))
+        y = cy + rad * math.sin(math.radians(ang))
+        drawer.goto(x, y)
+        drawer.setheading(ang + 90)
+        # draw a leaf as a small filled ellipse-like shape using circle segments
+        drawer.fillcolor(random.choice(["#2f8a44", "#2b7e3f", "#1f6a33"]))
+        drawer.begin_fill()
+        drawer.pendown()
+        drawer.forward(18)
+        drawer.right(40)
+        drawer.circle(10, 100)
+        drawer.right(80)
+        drawer.forward(18)
+        drawer.end_fill()
+        drawer.penup()
+
+    # add a ribbon at bottom
+    drawer.goto(-70, cy - inner_r - 20)
+    drawer.setheading(-20)
+    drawer.fillcolor("#8b0213")
+    drawer.begin_fill()
+    drawer.pendown()
+    drawer.circle(60, 150)
+    drawer.left(110)
+    drawer.forward(40)
+    drawer.left(120)
+    drawer.forward(70)
+    drawer.end_fill()
+    drawer.penup()
+
+    # small ribbon tails
+    drawer.goto(10, cy - inner_r - 80)
+    drawer.setheading(-90)
+    drawer.fillcolor("#8b0213")
+    drawer.begin_fill()
+    drawer.pendown()
+    drawer.circle(18, 160)
+    drawer.left(100)
+    drawer.forward(30)
+    drawer.end_fill()
+    drawer.penup()
+
+draw_wreath()
+
+# ---------- Create lights around wreath ----------
+# Decide positions around circle
+num_lights = 16
+lights = []
+colors = ["#ffd54d", "#ffecb3", "#ffb74d", "#fff59d"]  # warm yellows/orange-ish
+
+wcx, wcy = 0, -40
+wr = 210  # radius where lights sit
+
+for i in range(num_lights):
+    theta = 360 * i / num_lights
+    # offset slightly inwards/outwards randomly to vary positions
+    offset = random.uniform(-12, 12)
+    x = wcx + (wr + offset) * math.cos(math.radians(theta))
+    y = wcy + (wr + offset) * math.sin(math.radians(theta))
+    base_col = random.choice(colors)
+    light = Light(x, y, base_col)
+    lights.append(light)
+
+# ---------- Animation: flicker lights ----------
+# Each light will have a 'state' controlling on/off and intensity
+light_states = []
+for i in range(num_lights):
+    state = {
+        "on": True if random.random() > 0.2 else False,
+        "phase": random.random() * 2 * math.pi,
+        "speed": random.uniform(0.03, 0.2),
+        "base": random.uniform(0.6, 1.0)  # base intensity
+    }
+    light_states.append(state)
+
+frame = 0
+def animate():
+    global frame
+    frame += 1
+    # slightly twinkle each light
+    for i, light in enumerate(lights):
+        s = light_states[i]
+        # random small chance to toggle off/on for blink
+        if random.random() < 0.03:
+            s["on"] = not s["on"]
+        # vary phase
+        s["phase"] += s["speed"]
+        # intensity is combination of base and sinusoidal flicker and occasional blink
+        flick = (math.sin(s["phase"]) + 1) / 2  # 0..1
+        noise = random.uniform(-0.15, 0.15)
+        raw_int = max(0.0, min(1.0, s["base"] * (0.4 + 0.6 * flick) + noise))
+        if not s["on"]:
+            raw_int *= 0.12  # mostly off but faint glow
+        # occasionally make a bright spark
+        if random.random() < 0.01:
+            raw_int = min(1.0, raw_int + random.uniform(0.2, 0.5))
+
+        light.draw_glow(raw_int)
+
+    screen.update()
+    # schedule next frame (25-40 ms ~ 25-40 FPS). Trinket plays nice with 40.
+    screen.ontimer(animate, 40)
+
+# start animation
+animate()
+
+# Keep the window open (Trinket handles run loop; turtle.done is safe)
+turtle.done()
