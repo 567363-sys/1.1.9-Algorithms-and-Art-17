@@ -1,0 +1,81 @@
+import turtle, random
+
+screen = turtle.Screen()
+screen.setup(600, 600)
+screen.bgcolor("white")
+screen.tracer(0)
+
+t = turtle.Turtle()
+t.speed(0)
+t.pensize(2)
+
+def goto(x, y):
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+
+# Candle body
+def draw_candle():
+    t.color("light yellow")
+    goto(-20, -100)
+    t.begin_fill()
+    for _ in range(2):
+        t.forward(40)  # width
+        t.left(90)
+        t.forward(150)  # height
+        t.left(90)
+    t.end_fill()
+
+# Wick
+def draw_wick():
+    t.color("black")
+    t.pensize(3)
+    goto(0, 50)
+    t.setheading(90)
+    t.forward(10)
+
+# --- Flame Animation ---
+
+flame = turtle.Turtle()
+flame.hideturtle()
+flame.speed(0)
+
+def draw_flame_frame():
+    flame.clear()
+    flame.penup()
+    flame.goto(5, 65)
+    flame.setheading(90)
+    flame.pendown()
+
+    # Flicker by making the flame slightly wider/taller randomly
+    wiggle = random.randint(-2, 2)
+    tall = random.randint(15, 25)
+
+    flame.color("orange")
+    flame.begin_fill()
+    flame.setheading(10)
+
+    # Draw a simple teardrop flame shape
+    for _ in range(18):
+        flame.left(20)
+        flame.forward(5 + wiggle)
+
+    flame.left(25)
+    for _ in range(18):
+        flame.left(500)
+        flame.forward(10 + wiggle / 3)
+
+    flame.end_fill()
+
+    screen.update()
+    screen.ontimer(draw_flame_frame, 80)  # ~12 FPS flicker
+
+
+# --- Draw static objects ---
+draw_candle()
+draw_wick()
+
+# start animation
+draw_flame_frame()
+
+screen.mainloop()
