@@ -1,69 +1,77 @@
-import turtle
+import time
+import turtle as trtl
+import random as ran
 import math
-import random
+screen=trtl.Screen()
+trtl.tracer(0)
+p = trtl.Turtle()
+p.speed(0)
+screen.setup(800, 600)
+screen.bgcolor("Wheat2")  # dark background to make the glow pop
 
-# ---------- Setup ----------
-screen = turtle.Screen()
-screen.setup(800, 800)
-screen.bgcolor("#0e0f12")  # dark background to make the glow pop
-screen.tracer(0, 0)  # manual update for smooth animation
+# Outlines
+p.pensize(5)
+p.penup()
+p.pensize(2)
+p.goto(-140,40)
+p.pendown()
+p.fillcolor('grey20')
+p.begin_fill()
+for i in range(2):
+  p.forward(100)
+  p.left(90)
+  p.forward(130)
+  p.left(90)
+p.penup()
+p.pensize(2)
+p.goto(50,40)
+p.pendown()
+for i in range(2):
+  p.forward(100)
+  p.left(90)
+  p.forward(130)
+  p.left(90)
+p.end_fill()
+#Inner lines
+p.pensize(5)
+p.penup()
+p.goto(-90,40)
+p.left(90)
+p.pendown()
+p.forward(130)
+p.penup()
+p.goto(-40,105)
+p.pendown()
+p.left(90)
+p.forward(100)
 
+p.penup()
+p.goto(100,40)
+p.right(90)
+p.pendown()
+p.forward(130)
+p.penup()
+p.goto(150,105)
+p.pendown()
+p.left(90)
+p.forward(100)
+p.penup()
+
+
+
+#Extra still drawing code goes here!!!!!
 # Static drawer (wreath and decorations)
-drawer = turtle.Turtle()
+drawer = trtl.Turtle()
 drawer.hideturtle()
 drawer.speed(0)
 drawer.pensize(2)
 
-# Lights will each use their own turtle so we can clear/redraw them independently
-class Light:
-    def __init__(self, x, y, base_color):
-        self.x = x
-        self.y = y
-        self.base_color = base_color  # base warm color name (string)
-        self.t = turtle.Turtle()
-        self.t.hideturtle()
-        self.t.penup()
-        self.t.speed(0)
-
-    def draw_glow(self, intensity):
-        # intensity: 0.0 .. 1.0 (higher is brighter)
-        self.t.clear()
-        # simulate glow by drawing concentric circles (no alpha in turtle)
-        # outer rings: larger radii, lighter color (we simulate by using paler colors)
-        r_base = 12 + intensity * 10
-        rings = [
-            (r_base * 1.8, self._mix(self.base_color, "#0e0f12", 0.75)),  # widest, faint
-            (r_base * 1.1, self._mix(self.base_color, "#0e0f12", 0.45)),
-            (r_base * 0.6, self._mix(self.base_color, "#ffffff", 0.08)),
-            (r_base * 0.35, self._mix(self.base_color, "#ffffff", 0.0)),   # core bright
-        ]
-        for radius, color in rings:
-            self.t.goto(self.x, self.y - radius)
-            self.t.fillcolor("yellow")
-            self.t.begin_fill()
-            self.t.pendown()
-            self.t.circle(radius)
-            self.t.penup()
-            self.t.end_fill()
-
-    def _mix(self, hex1, hex2, frac):
-        # simple color mix: frac fraction of hex2 (0..1)
-        # returns hex color string
-        h1 = hex1.lstrip("#")
-        h2 = hex2.lstrip("#")
-        r1, g1, b1 = int(h1[0:2], 16), int(h1[2:4], 16), int(h1[4:6], 16)
-        r2, g2, b2 = int(h2[0:2], 16), int(h2[2:4], 16), int(h2[4:6], 16)
-        r = int(r1 * (1 - frac) + r2 * frac)
-        g = int(g1 * (1 - frac) + g2 * frac)
-        b = int(b1 * (1 - frac) + b2 * frac)
-
-# ---------- Draw wreath (static) ----------
 def draw_wreath():
     drawer.clear()
     # base ring
     cx, cy = 0, -40
-    outer_r = 260
-    inner_r = 140
+    outer_r = 80
+    inner_r = 40
 
     # draw outer green circle (thick)
     drawer.penup()
@@ -75,6 +83,7 @@ def draw_wreath():
     drawer.end_fill()
 
     # cut inner hole
+    drawer.fillcolor('wheat2')
     drawer.penup()
     drawer.goto(0, cy - inner_r)
     drawer.pendown()
@@ -93,7 +102,7 @@ def draw_wreath():
         drawer.goto(x, y)
         drawer.setheading(ang + 90)
         # draw a leaf as a small filled ellipse-like shape using circle segments
-        drawer.fillcolor(random.choice(["#2f8a44", "#2b7e3f", "#1f6a33"]))
+        drawer.fillcolor(ran.choice(["#2f8a44", "#2b7e3f", "#1f6a33"]))
         drawer.begin_fill()
         drawer.pendown()
         drawer.forward(18)
@@ -104,95 +113,173 @@ def draw_wreath():
         drawer.end_fill()
         drawer.penup()
 
-    # add a ribbon at bottom
-    drawer.goto(-70, cy - inner_r - 20)
-    drawer.setheading(-20)
-    drawer.fillcolor("#8b0213")
-    drawer.begin_fill()
-    drawer.pendown()
-    drawer.circle(60, 150)
-    drawer.left(110)
-    drawer.forward(40)
-    drawer.left(120)
-    drawer.forward(70)
-    drawer.end_fill()
-    drawer.penup()
-
-    # small ribbon tails
-    drawer.goto(10, cy - inner_r - 80)
-    drawer.setheading(-90)
-    drawer.fillcolor("#8b0213")
-    drawer.begin_fill()
-    drawer.pendown()
-    drawer.circle(18, 160)
-    drawer.left(100)
-    drawer.forward(30)
-    drawer.end_fill()
-    drawer.penup()
-
 draw_wreath()
 
-# ---------- Create lights around wreath ----------
-# Decide positions around circle
-num_lights = 16
-lights = []
-colors = ["#ffd54d", "#ffecb3", "#ffb74d", "#fff59d"]  # warm yellows/orange-ish
+#Animation after this point (probably figure out some wierd loop to make it all run at once)
+p.hideturtle()
 
-wcx, wcy = 0, -40
-wr = 210  # radius where lights sit
 
-for i in range(num_lights):
-    theta = 360 * i / num_lights
-    # offset slightly inwards/outwards randomly to vary positions
-    offset = random.uniform(-12, 12)
-    x = wcx + (wr + offset) * math.cos(math.radians(theta))
-    y = wcy + (wr + offset) * math.sin(math.radians(theta))
-    base_col = random.choice(colors)
-    light = Light(x, y, base_col)
-    lights.append(light)
 
-# ---------- Animation: flicker lights ----------
-# Each light will have a 'state' controlling on/off and intensity
-light_states = []
-for i in range(num_lights):
-    state = {
-        "on": True if random.random() > 0.2 else False,
-        "phase": random.random() * 2 * math.pi,
-        "speed": random.uniform(0.03, 0.2),
-        "base": random.uniform(0.6, 1.0)  # base intensity
-    }
-    light_states.append(state)
 
-frame = 0
-def animate():
-    global frame
-    frame += 1
-    # slightly twinkle each light
-    for i, light in enumerate(lights):
-        s = light_states[i]
-        # random small chance to toggle off/on for blink
-        if random.random() < 0.03:
-            s["on"] = not s["on"]
-        # vary phase
-        s["phase"] += s["speed"]
-        # intensity is combination of base and sinusoidal flicker and occasional blink
-        flick = (math.sin(s["phase"]) + 1) / 2  # 0..1
-        noise = random.uniform(-0.15, 0.15)
-        raw_int = max(0.0, min(1.0, s["base"] * (0.4 + 0.6 * flick) + noise))
-        if not s["on"]:
-            raw_int *= 0.12  # mostly off but faint glow
-        # occasionally make a bright spark
-        if random.random() < 0.01:
-            raw_int = min(1.0, raw_int + random.uniform(0.2, 0.5))
+snowflakes = []
+secondwindow = []
+for i in range(5):  #Makes first snowflakes
+  actsnow = trtl.Turtle()
+  actsnow.hideturtle()
+  actsnow.setheading(270)
+  actsnow.penup()
+  actsnow.goto(ran.randint(-130, -50), 169)
+  actsnow.shape('circle')
+  actsnow.color('white')
+  actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+  snowflakes.append(actsnow)
+for i in range(5):  #Makes second window snowflakes
+  actsnow = trtl.Turtle()
+  actsnow.hideturtle()
+  actsnow.setheading(270)
+  actsnow.penup()
+  actsnow.goto(ran.randint(60, 140), 169)
+  actsnow.shape('circle')
+  actsnow.color('white')
+  actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+  secondwindow.append(actsnow)
+alternate = 1
+x=1
+while x == 1: #infinite loop
 
-        light.draw_glow(raw_int)
+#SNOWFLAKES!
+  if alternate%30 == 0:
+    actsnow = trtl.Turtle()
+    actsnow.hideturtle()
+    actsnow.setheading(270)
+    actsnow.penup()
+    actsnow.goto(ran.randint(-130, -50), 169)
+    actsnow.shape('circle')
+    actsnow.color('white')
+    actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+    if -95< actsnow.xcor()<-85 :   #no more snow on middle line(almost)   (FIXED IT)
+      actsnow.hideturtle()
+    else:
+      snowflakes.append(actsnow)
+  
+  s1=ran.choice(snowflakes)
+  s2=ran.choice(snowflakes)
+  s3=ran.choice(snowflakes)
+  s4=ran.choice(snowflakes)
+  s1.showturtle()
+  s2.showturtle()
+  s3.showturtle()
+  s4.showturtle()   #moves snow
+  s1.forward(ran.randint(3,10))
+  s2.forward(ran.randint(8,15))
+  s3.forward(ran.randint(3,10))
+  s4.forward(ran.randint(8,15))
 
-    screen.update()
-    # schedule next frame (25-40 ms ~ 25-40 FPS). Trinket plays nice with 40.
-    screen.ontimer(animate, 40)
 
-# start animation
-animate()
+  if 100 < s1.ycor() <110:   #Hide turtle behind window bar
+    s1.hideturtle()
+  else:
+    s1.showturtle()
+  if 100 < s2.ycor() <110:
+    s2.hideturtle()
+  else:
+    s2.showturtle()
+  if 100 <s3.ycor()<110:
+    s3.hideturtle()
+  else:
+    s3.showturtle()
+  if 100 < s4.ycor() <110:
+    s4.hideturtle()
+  else:
+    s4.showturtle()
 
-# Keep the window open (Trinket handles run loop; turtle.done is safe)
-turtle.done()
+
+  if s1.ycor() > 40:   #gets rid of snow below window
+    snowflakes.append(s1)
+  else:
+    s1.hideturtle()
+  if s2.ycor() > 40:
+    snowflakes.append(s2)
+  else:
+    s2.hideturtle()
+  if s3.ycor() > 40:
+    snowflakes.append(s3)
+  else:
+    s3.hideturtle()
+  if s4.ycor() > 40:
+    snowflakes.append(s4)
+  else:
+    s4.hideturtle()
+    
+  
+    #Second window
+  if alternate%30 == 0:
+    actsnow = trtl.Turtle()
+    actsnow.hideturtle()
+    actsnow.setheading(270)
+    actsnow.penup()
+    actsnow.goto(ran.randint(60, 140), 169)
+    actsnow.shape('circle')
+    actsnow.color('white')
+    actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
+    secondwindow.append(actsnow)
+    alternate=alternate+1
+    if 105> actsnow.xcor()>95:
+      actsnow.hideturtle
+    else:
+      snowflakes.append(actsnow)
+  else:
+    alternate=alternate+1
+  s1=ran.choice(secondwindow)
+  s2=ran.choice(secondwindow)
+  s3=ran.choice(secondwindow)
+  s4=ran.choice(secondwindow)
+  s1.showturtle()
+  s2.showturtle()
+  s3.showturtle()
+  s4.showturtle()   #moves snow
+  s1.forward(ran.randint(3,10))
+  s2.forward(ran.randint(8,15))
+  s3.forward(ran.randint(3,10))
+  s4.forward(ran.randint(8,15))
+  
+  
+
+
+  if 100 < s1.ycor() <110:   #Hide turtle behind window bar
+    s1.hideturtle()
+  else:
+    s1.showturtle()
+  if 100 < s2.ycor() <110:
+    s2.hideturtle()
+  else:
+    s2.showturtle()
+  if 100 <s3.ycor()<110:
+    s3.hideturtle()
+  else:
+    s3.showturtle()
+  if 100 < s4.ycor() <110:
+    s4.hideturtle()
+  else:
+    s4.showturtle()
+
+
+  if s1.ycor() > 40:   #gets rid of snow below window
+    secondwindow.append(s1)
+  else:
+    s1.hideturtle()
+  if s2.ycor() > 40:
+    secondwindow.append(s2)
+  else:
+    s2.hideturtle()
+  if s3.ycor() > 40:
+    secondwindow.append(s3)
+  else:
+    s3.hideturtle()
+  if s4.ycor() > 40:
+    secondwindow.append(s4)
+  else:
+    s4.hideturtle()
+  time.sleep(.005)
+  trtl.update()   #update screen for animation
+#Just realized we don't need the last part because of animation code!
