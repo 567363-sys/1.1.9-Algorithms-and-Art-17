@@ -1,0 +1,99 @@
+import turtle
+import math
+screen = turtle.Screen()
+screen.setup(800, 550)
+t = turtle.Turtle()
+t.hideturtle()
+t.speed(10)
+t.up()
+turtle.colormode(255)
+def oval(x, y, w, h, color, angle=0, steps=100):
+    t.color(color)
+    pts = []
+    for i in range(steps):
+        a = 2*math.pi*i/steps
+        px = (w/2)*math.cos(a)
+        py = (h/2)*math.sin(a)
+
+        rx = px*math.cos(math.radians(angle)) - py*math.sin(math.radians(angle))
+        ry = px*math.sin(math.radians(angle)) + py*math.cos(math.radians(angle))
+        pts.append((x+rx, y+ry))
+    t.up()
+    t.goto(pts[0])
+    t.down()
+    t.begin_fill()
+    for p in pts:
+        t.goto(p)
+    t.end_fill()
+    t.up()
+def plate():
+    oval(0,-60, 500,220, (180,180,180))
+    oval(0,-50, 460,200, (225,225,225))
+    oval(0,-48, 430,180, (245,245,245))
+
+def turkey_body():
+    oval(-10, 20, 260,150, (155,85,20), angle=-10)
+    oval(-35, 40, 150,80, (210,130,50), angle=-15)
+    oval(40, 10, 110,55, (120,60,15), angle=-10)
+    oval(75, 5, 90,40, (90,45,10), angle=-8)
+    oval(-90, 28, 85,42, (95,50,10), angle=-12)
+def drumstick(x,y,flip=False):
+    angle = -30 if not flip else 30
+    oval(x, y, 100,130, (150,75,20), angle)
+    oval(x+( -10 if not flip else 10), y+18, 70,90, (180,100,30), angle)
+    oval(x+(18 if not flip else -18), y-12, 45,26, (100,50,15), angle)
+    t.goto(x+(45 if not flip else -45), y-40)
+    t.down()
+    t.color((245,245,230))
+    t.begin_fill()
+    t.circle(14)
+    t.end_fill()
+    t.up()
+def garnish():
+    for dx,dy,w,h in [
+        (-120,-55,60,25),
+        (-50,-85,50,22),
+        (25,-80,55,25),
+        (110,-55,60,25)
+    ]:
+        oval(dx,dy, w,h, (40,130,60), angle=-30)
+    for x,y in [(-150,-35),(150,-35)]:
+        oval(x,y, 55,32, (255,240,70), angle=10)
+        oval(x+5,y+5, 28,15, (255,255,160), angle=10)
+    for x,y in [(-180,-20),(180,-20)]:
+        oval(x,y, 40,30, (200,30,30))
+        oval(x+3,y+4, 20,14, (255,120,120))
+def texture():
+    t.color((90,45,15))
+    for x,y in [
+        (-30,25),(5,35),(55,15),(-70,30),(95,10),
+        (20,10),(-15,0),(45,-5),(-90,8)
+    ]:
+        t.goto(x,y)
+        t.down()
+        t.dot(7)
+        t.up()
+def steam():
+    t.color((255,255,255))
+    t.width(2)
+    for x in [-40,0,40]:
+        t.goto(x,110)
+        t.down()
+        t.setheading(90)
+        for _ in range(25):
+            t.forward(2)
+            t.right(2)
+        t.up()
+    t.width(1)
+def main():
+    plate()
+    turkey_body()
+    drumstick(-170,-40,False)
+    drumstick(150,-40,True)
+    garnish()
+    texture()
+    steam()
+    t.goto(0,-200)
+    t.color((70,70,70))
+    screen.mainloop()
+main()
