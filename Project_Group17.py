@@ -8,12 +8,26 @@ p = trtl.Turtle()
 p.speed(0)
 screen.setup(800, 600)
 screen.bgcolor("Wheat2")  # dark background to make the glow pop
+#table
+table=trtl.Turtle()
+table.speed(0)
+table.pencolor('brown')
+table.fillcolor('sienna4')
+table.penup()
+table.begin_fill()
+table.goto(-1000,-50)
+table.pendown()
+table.goto(1000,-50)
+table.goto(1000,-1000)
+table.goto(-1000,-1000)
+table.goto(-1000,-50)
+table.end_fill()
 
 # Outlines
 p.pensize(5)
 p.penup()
 p.pensize(2)
-p.goto(-140,40)
+p.goto(-250,100)
 p.pendown()
 p.fillcolor('grey20')
 p.begin_fill()
@@ -24,7 +38,7 @@ for i in range(2):
   p.left(90)
 p.penup()
 p.pensize(2)
-p.goto(50,40)
+p.goto(150,100)
 p.pendown()
 for i in range(2):
   p.forward(100)
@@ -35,23 +49,23 @@ p.end_fill()
 #Inner lines
 p.pensize(5)
 p.penup()
-p.goto(-90,40)
+p.goto(-200,100)
 p.left(90)
 p.pendown()
 p.forward(130)
 p.penup()
-p.goto(-40,105)
+p.goto(-150,165)
 p.pendown()
 p.left(90)
 p.forward(100)
 
 p.penup()
-p.goto(100,40)
+p.goto(200,100)
 p.right(90)
 p.pendown()
 p.forward(130)
 p.penup()
-p.goto(150,105)
+p.goto(250,165)
 p.pendown()
 p.left(90)
 p.forward(100)
@@ -69,13 +83,13 @@ drawer.pensize(2)
 def draw_wreath():
     drawer.clear()
     # base ring
-    cx, cy = 0, -40
+    cx, cy = 200, 20
     outer_r = 80
     inner_r = 40
 
     # draw outer green circle (thick)
     drawer.penup()
-    drawer.goto(0, cy - outer_r)
+    drawer.goto(200, cy - outer_r)
     drawer.pendown()
     drawer.fillcolor("#0b6b2a")
     drawer.begin_fill()
@@ -85,7 +99,7 @@ def draw_wreath():
     # cut inner hole
     drawer.fillcolor('wheat2')
     drawer.penup()
-    drawer.goto(0, cy - inner_r)
+    drawer.goto(200, cy - inner_r)
     drawer.pendown()
     drawer.begin_fill()
     drawer.circle(inner_r)
@@ -141,7 +155,7 @@ class SteamPuff(trtl.Turtle):
 steam_puffs = []  #new index for class steampuff 
 def create_steam():  #Note: Technically animation code, want to keep loop cleaner
     x = ran.randint(-15, 15)  
-    y = -200 # 
+    y = 100 # 
     new_puff = SteamPuff(x, y)
     steam_puffs.append(new_puff)
 
@@ -169,12 +183,12 @@ def goto(x, y):
 # Candle body
 def draw_candle():
     t.color("light yellow")
-    goto(-100, -100)
+    goto(-300, -100)
     t.begin_fill()
     for _ in range(2):
-        t.forward(20)  # width
+        t.forward(25)  # width
         t.left(90)
-        t.forward(75)  # height
+        t.forward(80)  # height
         t.left(90)
     t.end_fill()
 
@@ -182,7 +196,7 @@ def draw_candle():
 def draw_wick():
     t.color("black")
     t.pensize(3)
-    goto(-90, -25)
+    goto(-285, -20)
     t.setheading(90)
     t.forward(10)
 
@@ -195,7 +209,7 @@ flame.speed(0)
 def draw_flame_frame():
     flame.clear()
     flame.penup()
-    flame.goto(-85, -10)
+    flame.goto(-280, -5)
     flame.setheading(90)
     flame.pendown()
 
@@ -223,7 +237,99 @@ def draw_flame_frame():
 # --- Draw static objects ---
 draw_candle()
 draw_wick()
+#Turkey!
+t=trtl.Turtle()
+t.up()
+trtl.colormode(255)
+def oval(x, y, w, h, color, angle=0, steps=100):
+    t.color(color)
+    pts = []
+    for i in range(steps):
+        a = 2*math.pi*i/steps
+        px = (w/2)*math.cos(a)
+        py = (h/2)*math.sin(a)
 
+        rx = px*math.cos(math.radians(angle)) - py*math.sin(math.radians(angle))
+        ry = px*math.sin(math.radians(angle)) + py*math.cos(math.radians(angle))
+        pts.append((x+rx, y+ry))
+    t.up()
+    t.goto(pts[0])
+    t.down()
+    t.begin_fill()
+    for p in pts:
+        t.goto(p)
+    t.end_fill()
+    t.up()
+def plate():
+    oval(0,-60, 500,220, (180,180,180))
+    oval(0,-50, 460,200, (225,225,225))
+    oval(0,-48, 430,180, (245,245,245))
+
+def turkey_body():
+    oval(-10, 20, 260,150, (155,85,20), angle=-10)
+    oval(-35, 40, 150,80, (210,130,50), angle=-15)
+    oval(40, 10, 110,55, (120,60,15), angle=-10)
+    oval(75, 5, 90,40, (90,45,10), angle=-8)
+    oval(-90, 28, 85,42, (95,50,10), angle=-12)
+def drumstick(x,y,flip=False):
+    angle = -30 if not flip else 30
+    oval(x, y, 100,130, (150,75,20), angle)
+    oval(x+( -10 if not flip else 10), y+18, 70,90, (180,100,30), angle)
+    oval(x+(18 if not flip else -18), y-12, 45,26, (100,50,15), angle)
+    t.goto(x+(45 if not flip else -45), y-40)
+    t.down()
+    t.color((245,245,230))
+    t.begin_fill()
+    t.circle(14)
+    t.end_fill()
+    t.up()
+def garnish():
+    for dx,dy,w,h in [
+        (-120,-55,60,25),
+        (-50,-85,50,22),
+        (25,-80,55,25),
+        (110,-55,60,25)
+    ]:
+        oval(dx,dy, w,h, (40,130,60), angle=-30)
+    for x,y in [(-150,-35),(150,-35)]:
+        oval(x,y, 55,32, (255,240,70), angle=10)
+        oval(x+5,y+5, 28,15, (255,255,160), angle=10)
+    for x,y in [(-180,-20),(180,-20)]:
+        oval(x,y, 40,30, (200,30,30))
+        oval(x+3,y+4, 20,14, (255,120,120))
+def texture():
+    t.color((90,45,15))
+    for x,y in [
+        (-30,25),(5,35),(55,15),(-70,30),(95,10),
+        (20,10),(-15,0),(45,-5),(-90,8)
+    ]:
+        t.goto(x,y)
+        t.down()
+        t.dot(7)
+        t.up()
+def steam():
+    t.color((255,255,255))
+    t.width(2)
+    for x in [-40,0,40]:
+        t.goto(x,110)
+        t.down()
+        t.setheading(90)
+        for _ in range(25):
+            t.forward(2)
+            t.right(2)
+        t.up()
+    t.width(1)
+def main():
+    plate()
+    turkey_body()
+    drumstick(-170,-40,False)
+    drumstick(150,-40,True)
+    garnish()
+    texture()
+    steam()
+    t.goto(0,-200)
+    t.color((70,70,70))
+main()
 
 
 #Animation after this point (probably figure out some wierd loop to make it all run at once)
@@ -239,7 +345,7 @@ for i in range(5):  #Makes first snowflakes
   actsnow.hideturtle()
   actsnow.setheading(270)
   actsnow.penup()
-  actsnow.goto(ran.randint(-130, -50), 169)
+  actsnow.goto(ran.randint(-245, -150), 230)
   actsnow.shape('circle')
   actsnow.color('white')
   actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
@@ -264,11 +370,11 @@ while x == 1: #infinite loop
     actsnow.hideturtle()
     actsnow.setheading(270)
     actsnow.penup()
-    actsnow.goto(ran.randint(-130, -50), 169)
+    actsnow.goto(ran.randint(-240, -150), 230)
     actsnow.shape('circle')
     actsnow.color('white')
     actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
-    if -95< actsnow.xcor()<-85 :   #no more snow on middle line(almost)   (FIXED IT)
+    if -195< actsnow.xcor()<-205 :   #no more snow on middle line(almost)   (FIXED IT)
       actsnow.hideturtle()
     else:
       snowflakes.append(actsnow)
@@ -287,37 +393,37 @@ while x == 1: #infinite loop
   s4.forward(ran.randint(8,15))
 
 
-  if 100 < s1.ycor() <110:   #Hide turtle behind window bar
+  if 160 < s1.ycor() <170:   #Hide turtle behind window bar
     s1.hideturtle()
   else:
     s1.showturtle()
-  if 100 < s2.ycor() <110:
+  if 160 < s2.ycor() <170:
     s2.hideturtle()
   else:
     s2.showturtle()
-  if 100 <s3.ycor()<110:
+  if 160 <s3.ycor()<170:
     s3.hideturtle()
   else:
     s3.showturtle()
-  if 100 < s4.ycor() <110:
+  if 160 < s4.ycor() <170:
     s4.hideturtle()
   else:
     s4.showturtle()
 
 
-  if s1.ycor() > 40:   #gets rid of snow below window
+  if s1.ycor() > 100:   #gets rid of snow below window
     snowflakes.append(s1)
   else:
     s1.hideturtle()
-  if s2.ycor() > 40:
+  if s2.ycor() > 100:
     snowflakes.append(s2)
   else:
     s2.hideturtle()
-  if s3.ycor() > 40:
+  if s3.ycor() > 100:
     snowflakes.append(s3)
   else:
     s3.hideturtle()
-  if s4.ycor() > 40:
+  if s4.ycor() > 100:
     snowflakes.append(s4)
   else:
     s4.hideturtle()
@@ -329,13 +435,13 @@ while x == 1: #infinite loop
     actsnow.hideturtle()
     actsnow.setheading(270)
     actsnow.penup()
-    actsnow.goto(ran.randint(60, 140), 169)
+    actsnow.goto(ran.randint(155, 245), 230)
     actsnow.shape('circle')
     actsnow.color('white')
     actsnow.shapesize(stretch_wid= .1, stretch_len= .1)
     secondwindow.append(actsnow)
     alternate=alternate+1
-    if 105> actsnow.xcor()>95:
+    if 195> actsnow.xcor()>205:
       actsnow.hideturtle
     else:
       snowflakes.append(actsnow)
@@ -357,37 +463,37 @@ while x == 1: #infinite loop
   
 
 
-  if 100 < s1.ycor() <110:   #Hide turtle behind window bar
+  if 160 < s1.ycor() <170:   #Hide turtle behind window bar
     s1.hideturtle()
   else:
     s1.showturtle()
-  if 100 < s2.ycor() <110:
+  if 160 < s2.ycor() <170:
     s2.hideturtle()
   else:
     s2.showturtle()
-  if 100 <s3.ycor()<110:
+  if 160 <s3.ycor()<170:
     s3.hideturtle()
   else:
     s3.showturtle()
-  if 100 < s4.ycor() <110:
+  if 160 < s4.ycor() <170:
     s4.hideturtle()
   else:
     s4.showturtle()
 
 
-  if s1.ycor() > 40:   #gets rid of snow below window
+  if s1.ycor() > 100:   #gets rid of snow below window
     secondwindow.append(s1)
   else:
     s1.hideturtle()
-  if s2.ycor() > 40:
+  if s2.ycor() > 100:
     secondwindow.append(s2)
   else:
     s2.hideturtle()
-  if s3.ycor() > 40:
+  if s3.ycor() > 100:
     secondwindow.append(s3)
   else:
     s3.hideturtle()
-  if s4.ycor() > 40:
+  if s4.ycor() > 100:
     secondwindow.append(s4)
   else:
     s4.hideturtle()
