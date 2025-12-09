@@ -1,0 +1,24 @@
+import turtle as trtl
+turtle = trtl
+
+
+trtl.begin_fill()
+trtl.color("grey")
+trtl.circle(50)
+trtl.end_fill()
+trtl.color("black")
+trtl.penup()
+trtl.left(45)
+trtl.forward(15)
+trtl.pendown()
+trtl.circle(10)
+trtl.penup()
+trtl.left(30)
+trtl.forward(40)
+trtl.pendown()
+trtl.circle(8)
+trtl.penup()
+trtl.left(40)
+trtl.forward(40)
+trtl.pendown()
+trtl.circle(7)
