@@ -23,6 +23,7 @@ table.goto(-1000,-1000)
 table.goto(-1000,-50)
 table.end_fill()
 
+
 # Outlines
 p.pensize(5)
 p.penup()
@@ -46,6 +47,33 @@ for i in range(2):
   p.forward(130)
   p.left(90)
 p.end_fill()
+
+#Moon
+
+turtle = trtl
+trtl.penup()
+trtl.hideturtle()
+trtl.goto(-185,170)
+trtl.begin_fill()
+trtl.color("lightgrey")
+trtl.circle(25)
+trtl.end_fill()
+trtl.color("black")
+trtl.penup()
+trtl.left(45)
+trtl.forward(7)
+trtl.pendown()
+trtl.circle(5)
+trtl.penup()
+trtl.left(30)
+trtl.forward(20)
+trtl.pendown()
+trtl.circle(4)
+trtl.penup()
+trtl.left(40)
+trtl.forward(20)
+trtl.pendown()
+trtl.circle(7)
 #Inner lines
 p.pensize(5)
 p.penup()
@@ -83,13 +111,13 @@ drawer.pensize(2)
 def draw_wreath():
     drawer.clear()
     # base ring
-    cx, cy = 200, 20
+    cx, cy = 0, 200
     outer_r = 80
     inner_r = 40
 
     # draw outer green circle (thick)
     drawer.penup()
-    drawer.goto(200, cy - outer_r)
+    drawer.goto(0, cy - outer_r)
     drawer.pendown()
     drawer.fillcolor("#0b6b2a")
     drawer.begin_fill()
@@ -99,7 +127,7 @@ def draw_wreath():
     # cut inner hole
     drawer.fillcolor('wheat2')
     drawer.penup()
-    drawer.goto(200, cy - inner_r)
+    drawer.goto(0, cy - inner_r)
     drawer.pendown()
     drawer.begin_fill()
     drawer.circle(inner_r)
@@ -331,6 +359,108 @@ def main():
     t.color((70,70,70))
 main()
 
+
+#Flowers
+trtl.colormode(255)  # Enable RGB colors
+t = trtl.Turtle()
+t.speed(0)
+t.hideturtle()
+x_offset = 330  # Shift vase left
+y_offset = 10
+def draw_gradient_petal(x, y, radius, angle, start_color, end_color):
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+    layers = 5
+    for i in range(layers):
+        r = int(start_color[0] + (end_color[0]-start_color[0])*i/layers)
+        g = int(start_color[1] + (end_color[1]-start_color[1])*i/layers)
+        b = int(start_color[2] + (end_color[2]-start_color[2])*i/layers)
+        t.fillcolor(r, g, b)
+        t.begin_fill()
+        t.circle(radius - i*3, angle)
+        t.left(180 - angle)
+        t.circle(radius - i*3, angle)
+        t.left(180 - angle)
+        t.end_fill()
+def draw_flower(x, y, petals, radius):
+    for i in range(petals):
+        draw_gradient_petal(x, y, radius, 60, (255,50,50), (255,200,200))
+        t.right(360/petals)
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+    t.fillcolor("yellow")
+    t.begin_fill()
+    t.circle(radius/5)
+    t.end_fill()
+def draw_leaf(x, y, scale):
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+    t.color("green")
+    t.begin_fill()
+    t.setheading(ran.randint(20, 60))
+    for _ in range(2):
+        t.circle(15*scale,90)
+        t.circle(7*scale,90)
+    t.end_fill()
+def draw_fancy_small_vase():
+    base_x = x_offset
+    base_y = y_offset - 150
+    t.penup()
+    t.goto(base_x, base_y)
+    t.pendown()
+    t.color("cyan4")
+    t.begin_fill()
+    # Curved sides
+    t.goto(base_x-20, base_y)
+    t.goto(base_x-35, base_y+70)
+    t.goto(base_x-25, base_y+150)  # Neck
+    t.goto(base_x+25, base_y+150)
+    t.goto(base_x+35, base_y+70)
+    t.goto(base_x+20, base_y)
+    t.goto(base_x, base_y)
+    t.end_fill()
+    for i in range(6):
+        t.penup()
+        t.goto(base_x-25 + i*5, base_y+5*i)
+        t.pendown()
+        t.color((160+i*8,82+i*5,45+i*3))
+        t.goto(base_x-25 + i*5, base_y+70 - 5*i)
+    t.penup()
+    t.color("gold")
+    for y in range(base_y+10, base_y+70, 15):
+        t.goto(base_x-10, y)
+        t.pendown()
+        t.dot(5)
+        t.penup()
+        t.goto(base_x+10, y+5)
+        t.pendown()
+        t.dot(5)
+    t.penup()
+    t.goto(base_x-25, base_y+150)
+    t.pendown()
+    t.width(2)
+    t.goto(base_x+25, base_y+150)
+    t.width(1)
+draw_fancy_small_vase()
+flower_positions = [(0, 0), (-20, 15), (20, 20), (-10, 30), (10, 35)]
+flower_radii = []
+for pos in flower_positions:
+    radius = ran.randint(30,45)
+    flower_radii.append(radius)
+    draw_flower(pos[0]+x_offset, pos[1]+y_offset, petals=ran.randint(6,9), radius=radius)
+leaf_positions = [(-35, -10), (35, -20), (-15, 5), (15, 10), (0, 25)]
+t.color("green")
+t.width(3)
+for pos, radius in zip(flower_positions, flower_radii):
+    t.penup()
+    t.goto(pos[0]+x_offset, pos[1]-radius/2+y_offset)
+    t.pendown()
+    t.goto(pos[0]+x_offset, y_offset-80)
+t.width(1)
+t.hideturtle()
 
 #Animation after this point (probably figure out some wierd loop to make it all run at once)
 p.hideturtle()
