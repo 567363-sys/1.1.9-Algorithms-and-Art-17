@@ -65,8 +65,10 @@ def draw_wreath():
         drawer.penup()
 
 draw_wreath()
-screen.mainloop()
+
 
 #Animation after this point (probably figure out some wierd loop to make it all run at once)
 p.hideturtle()
+
+
 
