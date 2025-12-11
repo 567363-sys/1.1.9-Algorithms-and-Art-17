@@ -358,7 +358,7 @@ def main():
     t.goto(0,-200)
     t.color((70,70,70))
 main()
-
+t.hideturtle()
 
 #Flowers
 trtl.colormode(255)  # Enable RGB colors
